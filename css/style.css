@@ -1511,9 +1511,12 @@ ul { list-style: none; }
   transform-style: preserve-3d;
   animation: cube-spin 18s linear infinite;
   cursor: grab;
+  touch-action: none;
 }
 .cube:hover { animation-play-state: paused; }
-.cube.paused { animation-play-state: paused; }
+/* Paused = animation removed so inline transform from drag actually applies.
+   (animation-play-state: paused still wins over inline style.) */
+.cube.paused { animation: none; }
 .cube:active { cursor: grabbing; }
 
 .cube-face {
