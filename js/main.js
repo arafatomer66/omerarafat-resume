@@ -224,3 +224,69 @@ const titleObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.4 });
 document.querySelectorAll('.section-title').forEach(t => titleObserver.observe(t));
+
+/* ══════════════════════════════════════════════════════════
+   3D EFFECTS — perspective tilt cards + draggable tech cube
+   ══════════════════════════════════════════════════════════ */
+
+// ── 3D cursor tilt on cards ───────────────────────────────
+if (finePointer && !reduceMotion) {
+  const tiltCards = document.querySelectorAll(
+    '.skill-category, .project-card, .blog-card, .edu-card, .contact-card'
+  );
+  const TILT_MAX = 8; // degrees
+
+  tiltCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width  - 0.5;
+      const y = (e.clientY - rect.top)  / rect.height - 0.5;
+      card.style.setProperty('--rx', (x * TILT_MAX) + 'deg');
+      card.style.setProperty('--ry', (-y * TILT_MAX) + 'deg');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+    });
+  });
+}
+
+// ── Drag-to-spin the tech cube ────────────────────────────
+const cube = document.getElementById('techCube');
+if (cube && !reduceMotion) {
+  let dragging = false;
+  let lastX = 0, lastY = 0;
+  let rotX = -12, rotY = 0;
+
+  const apply = () => {
+    cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  };
+
+  cube.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    cube.classList.add('paused');
+    cube.setPointerCapture(e.pointerId);
+    lastX = e.clientX;
+    lastY = e.clientY;
+    apply();
+    e.preventDefault();
+  });
+
+  cube.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    rotY += (e.clientX - lastX) * 0.5;
+    rotX -= (e.clientY - lastY) * 0.5;
+    rotX = Math.max(-75, Math.min(75, rotX));
+    lastX = e.clientX;
+    lastY = e.clientY;
+    apply();
+  });
+
+  const stopDrag = (e) => {
+    if (!dragging) return;
+    dragging = false;
+    try { cube.releasePointerCapture(e.pointerId); } catch (_) {}
+  };
+  cube.addEventListener('pointerup', stopDrag);
+  cube.addEventListener('pointercancel', stopDrag);
+}
