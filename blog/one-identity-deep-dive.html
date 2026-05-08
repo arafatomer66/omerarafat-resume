@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Identity Manager — A Deep Dive | Omer Arafat</title>
+  <meta name="description" content="Object Layer, Designer, ITShop and Web Designer — what 'pro' work in One Identity Manager actually feels like." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <nav id="navbar" class="scrolled">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">OA</a>
+      <ul class="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#education">Education</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <a href="mailto:arafatomer66@gmail.com" class="nav-cta">Hire Me</a>
+    </div>
+  </nav>
+
+  <article class="post-page">
+    <div class="container">
+      <a href="../index.html#blog" class="post-back">← Back to all posts</a>
+
+      <header class="post-header">
+        <div class="post-meta">
+          <span>May 4, 2026</span>
+          <span class="blog-dot">·</span>
+          <span>7 min read</span>
+        </div>
+        <h1 class="post-title">One Identity Manager: A Deep Dive From Someone Who Lived in It</h1>
+        <div class="post-tags">
+          <span>One Identity</span><span>IGA</span><span>IM-IC</span><span>IM-WD</span>
+        </div>
+      </header>
+
+      <div class="post-cover" style="background:linear-gradient(135deg,#0F4C81,#1B6CA8)">🆔</div>
+
+      <div class="post-body">
+        <p>
+          One Identity Manager has the reputation of being "the German one" — heavy, stable, deeply configurable, slightly intimidating. After spending months building a 6-phase learning path on it (now public on GitHub), I think that reputation is half right. It <em>is</em> heavy. But once you understand the model, the rest of IGA looks like a thin layer on top of a database.
+        </p>
+
+        <h2>1. The Object Layer is the whole product</h2>
+        <p>
+          Every other IGA platform tries to hide the data model. One Identity hands you the keys. Tables, columns, foreign keys, triggers — the Object Layer is just a typed wrapper over a SQL database, and once that clicks, every confusing thing about the platform stops being confusing.
+        </p>
+        <p>
+          Want to know why an entitlement was assigned? Read <code>UNSAccountBInUNSGroupB</code>. Want to know who triggered it? Trace it back through the XOrigin columns. There is nothing hidden. That is rare in enterprise software, and it is the single biggest reason senior engineers like working with it.
+        </p>
+
+        <h2>2. Designer is unfashionable and excellent</h2>
+        <p>
+          Designer feels like a mid-2000s thick client because it is one. It also lets you edit table definitions, scripts, processes, jobs, and customizations in one place with full version control. I will take that over a "modern" web admin that hides half the model behind a wizard, every single time.
+        </p>
+        <ul>
+          <li><strong>Schema extensions</strong> — add a column, recompile, ship.</li>
+          <li><strong>Process scripts</strong> — VB.NET, but the surface area is small and very predictable.</li>
+          <li><strong>Customizer compile</strong> — your custom layer is isolated from base, so upgrades stop being scary.</li>
+        </ul>
+
+        <h2>3. ITShop is the user-facing magic</h2>
+        <p>
+          The Web Designer ITShop is where most users actually meet One Identity. Approval workflows, shopping cart, request history — built right, an ITShop replaces three separate ticketing tools. Built wrong, it becomes the place tickets go to die. The difference is almost always in how you model the <em>service items</em>: granular enough to be meaningful, coarse enough that humans can choose without a glossary.
+        </p>
+
+        <h2>4. The certification you are working toward matters</h2>
+        <p>
+          IM-IC (configuration) and IM-WD (web designer) are the two that actually move the career needle. IM-IC proves you can implement and extend the platform. IM-WD proves you can ship the user-facing portal. Most engineers stop at IM-IC. The ones who do both end up leading IAM tracks at large enterprises.
+        </p>
+        <blockquote>
+          One Identity rewards depth. The platform is wide enough that you can stay shallow forever — but every shop I have seen is desperate for engineers who actually understand the Object Layer.
+        </blockquote>
+
+        <h2>5. When I would pick One Identity over SailPoint</h2>
+        <ol>
+          <li>You already run on SQL Server and want everything in one stack.</li>
+          <li>Your governance requirements are heavily on-prem or hybrid, not cloud-native.</li>
+          <li>You need deep, custom data modeling — not just RBAC + certifications.</li>
+          <li>You have engineers who like reading the schema and dislike SaaS abstractions.</li>
+        </ol>
+
+        <h2>If you are starting today</h2>
+        <p>
+          Spin up a lab VM, install IM, and follow the official AD connector tutorial end-to-end. Then open Designer and read the <code>Person</code> table. Read every column. That single exercise teaches more than two days of training videos. Once you can predict what each column does, you are 60% of the way to IM-IC.
+        </p>
+        <p>
+          One Identity is not a flashy product. It is a serious one. If your career is heading toward enterprise IGA, going deep on it is one of the best investments you can make right now.
+        </p>
+      </div>
+
+      <div class="post-footer">
+        <div class="post-footer-author">
+          Written by <strong>Omer Arafat</strong> · Senior Software Engineer (IAM), Allianz Australia
+        </div>
+        <a href="../index.html#blog" class="post-back">← All posts</a>
+      </div>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">OA</div>
+        <p>© 2025 Omer Arafat · Dhaka, Bangladesh</p>
+        <p class="footer-sub">Built with pure HTML, CSS &amp; JS — no frameworks needed.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

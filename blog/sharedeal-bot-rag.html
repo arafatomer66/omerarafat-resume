@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShareDeal Knowledge Bot — RAG With Tool Use | Omer Arafat</title>
+  <meta name="description" content="Building an internal + external knowledge bot for ShareDeal with Claude Opus 4.7, Voyage embeddings and ChromaDB — and what 'good RAG' actually looks like." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <nav id="navbar" class="scrolled">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">OA</a>
+      <ul class="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#education">Education</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <a href="mailto:arafatomer66@gmail.com" class="nav-cta">Hire Me</a>
+    </div>
+  </nav>
+
+  <article class="post-page">
+    <div class="container">
+      <a href="../index.html#blog" class="post-back">← Back to all posts</a>
+
+      <header class="post-header">
+        <div class="post-meta">
+          <span>Mar 12, 2026</span>
+          <span class="blog-dot">·</span>
+          <span>7 min read</span>
+        </div>
+        <h1 class="post-title">ShareDeal Knowledge Bot: RAG, Tool Use, and the Stuff Tutorials Skip</h1>
+        <div class="post-tags">
+          <span>Claude</span><span>RAG</span><span>ChromaDB</span><span>Voyage</span>
+        </div>
+      </header>
+
+      <div class="post-cover" style="background:linear-gradient(135deg,#1d6b1d,#4CBC44)">🤖</div>
+
+      <div class="post-body">
+        <p>
+          ShareDeal has two audiences who keep asking the same questions: employees ("how do refunds work for partial-fulfilment groups?") and customers ("why was my order split into two deliveries?"). Both questions have the same property — there's a clear answer somewhere in our docs, our SOPs, or our database, and a human is paid to look it up. That's the entire pitch for a knowledge bot.
+        </p>
+        <p>
+          So I built one. Python, Claude Opus 4.7, Voyage embeddings, ChromaDB. Here's what actually mattered.
+        </p>
+
+        <h2>1. Two audiences, one bot, two policies</h2>
+        <p>
+          Employees can see SOPs, internal pricing logic and partner contracts. Customers cannot. The bot is the same model and the same retrieval pipeline — but the document filter and the system prompt change based on the caller. One codebase, two trust boundaries. That separation is non-negotiable.
+        </p>
+
+        <h2>2. Voyage for retrieval, Claude for reasoning</h2>
+        <p>
+          Embeddings get a lot of attention they don't deserve. Most of the heavy lifting is done by the LLM <em>after</em> retrieval, not the retriever itself. Voyage gives me strong, cheap embeddings and that's all I need from it. The interesting work is in chunking, query rewriting, and how I phrase the system prompt for the answering step.
+        </p>
+
+        <h2>3. Tool use is what makes it useful</h2>
+        <p>
+          Pure RAG can answer "what is our refund policy". Tool use lets it answer "did <em>my</em> refund go through". The bot has access to a small set of typed tools — <code>get_order(order_id)</code>, <code>list_recent_refunds(user_id)</code>, <code>get_partner(slug)</code> — each of which is a tightly scoped function that hits the real backend with the user's permissions. Claude is great at picking which tool to call and stitching the result into the answer.
+        </p>
+
+        <h2>4. Prompt caching is the cost story</h2>
+        <p>
+          The system prompt is long — policy, examples, tool definitions, tone. Without prompt caching, every turn pays for that. With caching, the cost drops by an order of magnitude on multi-turn conversations. If you skip prompt caching, you're not really using the platform.
+        </p>
+
+        <h2>5. The unglamorous parts that decide quality</h2>
+        <ul>
+          <li><strong>Chunking.</strong> Legal docs and chat transcripts need different chunk sizes and overlaps. There is no universal answer.</li>
+          <li><strong>Query rewriting.</strong> The user's first message is rarely the right query. Rewriting it before retrieval is the single highest-leverage thing in the pipeline.</li>
+          <li><strong>Citations.</strong> Every answer should be traceable to a source chunk. Without citations, you can't tell hallucinations from miss-matches.</li>
+          <li><strong>Eval set.</strong> A frozen list of 50 real questions with expected answer shapes. Run it on every prompt change. Without this, you're flying blind.</li>
+        </ul>
+
+        <blockquote>
+          The model is not the moat. The data, the tooling around the data, and the discipline of evaluating on real questions — that's the moat.
+        </blockquote>
+
+        <h2>What's next</h2>
+        <p>
+          Adding the customer-facing channel into the WhatsApp business surface so support can deflect the easy questions. Most users don't want a chatbot in a tab — they want their question answered where they're already typing. That's WhatsApp, in Bangladesh.
+        </p>
+      </div>
+
+      <div class="post-footer">
+        <div class="post-footer-author">
+          Written by <strong>Omer Arafat</strong> · Co-Founder &amp; CTO, ShareDeal.
+        </div>
+        <a href="../index.html#blog" class="post-back">← All posts</a>
+      </div>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">OA</div>
+        <p>© 2025 Omer Arafat · Dhaka, Bangladesh</p>
+        <p class="footer-sub">Built with pure HTML, CSS &amp; JS — no frameworks needed.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

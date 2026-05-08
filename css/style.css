@@ -357,7 +357,7 @@ ul { list-style: none; }
   box-shadow: 0 4px 24px rgba(99,102,241,0.35);
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
+  --lift: -2px;
   box-shadow: 0 8px 32px rgba(99,102,241,0.5);
 }
 .btn-ghost {
@@ -369,7 +369,7 @@ ul { list-style: none; }
   border-color: var(--accent);
   color: var(--text);
   background: rgba(99,102,241,0.08);
-  transform: translateY(-2px);
+  --lift: -2px;
 }
 
 /* Stats */
@@ -1281,4 +1281,170 @@ ul { list-style: none; }
   color: var(--text-sec);
 }
 .post-footer-author strong { color: var(--text); }
+
+/* ══════════════════════════════════════════════════════════════════════
+   2D EFFECTS — spotlight, sheen, ripple, magnetic, parallax, underline
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Card spotlight (cursor-follow radial glow) ──────────────────────── */
+.skill-category,
+.project-card,
+.blog-card,
+.edu-card,
+.contact-card {
+  position: relative;
+  overflow: hidden;
+  --mx: 50%;
+  --my: 50%;
+}
+.skill-category::before,
+.project-card::before,
+.blog-card::before,
+.edu-card::before,
+.contact-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--mx) var(--my),
+    rgba(99, 102, 241, 0.18),
+    rgba(6, 182, 212, 0.08) 35%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.skill-category:hover::before,
+.project-card:hover::before,
+.blog-card:hover::before,
+.edu-card:hover::before,
+.contact-card:hover::before {
+  opacity: 1;
+}
+/* keep card content above the glow */
+.skill-category > *,
+.project-card > *,
+.edu-card > *,
+.contact-card > *,
+.blog-card-body,
+.blog-card-media { position: relative; z-index: 1; }
+
+/* ── Diagonal sheen sweep on card hover ──────────────────────────────── */
+.project-card::after,
+.blog-card::after,
+.edu-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 55%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  transition: left 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+.project-card:hover::after,
+.blog-card:hover::after,
+.edu-card:hover::after {
+  left: 130%;
+}
+
+/* ── Skill-tag bounce/tilt ───────────────────────────────────────────── */
+.skill-tag {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color var(--trans),
+              color var(--trans),
+              background var(--trans);
+}
+.skill-tag:hover {
+  transform: translateY(-2px) rotate(-2deg) scale(1.05);
+  background: rgba(99, 102, 241, 0.12);
+}
+
+/* ── Buttons: magnetic transform + ripple ────────────────────────────── */
+.btn,
+.nav-cta {
+  position: relative;
+  overflow: hidden;
+  transform: translate(
+    var(--mag-x, 0px),
+    calc(var(--mag-y, 0px) + var(--lift, 0px))
+  );
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              background var(--trans),
+              border-color var(--trans),
+              color var(--trans),
+              box-shadow var(--trans);
+  will-change: transform;
+}
+.btn .ripple,
+.nav-cta .ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  animation: ripple-out 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  mix-blend-mode: screen;
+}
+@keyframes ripple-out {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ── Section title animated underline ────────────────────────────────── */
+.section-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 14px;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.section-title.underline-in::after { width: 72px; }
+
+/* ── Hero orbs: smooth follow for mouse parallax ─────────────────────── */
+.orb {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* ── Reduced-motion: kill all the new movement ───────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .skill-category::before,
+  .project-card::before,
+  .blog-card::before,
+  .edu-card::before,
+  .contact-card::before,
+  .project-card::after,
+  .blog-card::after,
+  .edu-card::after { display: none; }
+
+  .skill-tag:hover { transform: none; }
+  .btn, .nav-cta { transform: none !important; }
+  .section-title.underline-in::after { transition: none; }
+  .orb { transition: none; }
+}
 
